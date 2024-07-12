@@ -1,5 +1,4 @@
 import sqlite3
-import validators
 
 
 class DataBaseManager:
@@ -44,11 +43,31 @@ class DataBaseManager:
                 return None
         raise ValueError(f'Таблицы {table_name} не существует или неверные данные')
 
-    def update_record(self, table_name):
-        pass
+    def update_record(self, table_name: str, update_values: dict, condition: str):
+        """
+        Обновляет запись в таблице.
+        :param table_name: str, имя таблицы
+        :param update_values: dict, словарь с обновляемыми значениями (например, {"name": "new_name"})
+        :param condition: str, условие для обновления (например, "id = 1")
+        """
+        set_clause = ", ".join([f"{col} = ?" for col in update_values.keys()])
+        values = list(update_values.values())
+        update_query = f"UPDATE {table_name} SET {set_clause} WHERE {condition}"
+        self.__cursor.execute(update_query, values)
 
-    def backup_table(self):
-        pass
+    def delete_record(self, table_name: str, condition: str):
+        """
+        Удаляет запись из таблицы.
+        :param table_name: str, имя таблицы
+        :param condition: str, условие для удаления (например, "id = 1")
+        """
+        delete_query = f"DELETE FROM {table_name} WHERE {condition}"
+        self.__cursor.execute(delete_query)
 
-    def get_info(self):
-        print(f'{self.__db_file}: {[x for x in self.__cursor.execute("SELECT * FROM SQLITE_SCHEMA")]}')
+    def backup_table(self, table_name: str, backup_table_name: str):
+        """
+        Создает резервную копию таблицы.
+        :param table_name: str, имя таблицы
+        :param backup_table_name: str, имя резервной таблицы
+        """
+        self.__cursor.execute(f"CREATE TABLE {backup_table_name} AS SELECT * FROM {table_name}")

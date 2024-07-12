@@ -3,6 +3,17 @@ import constansts
 import validators
 
 
+def get_timestamp_from_date(year, month, day, hour=0, minute=0, second=0):
+    validators.validate_time_data(year, month, day, hour, minute, second)
+    return datetime.datetime.timestamp(datetime.datetime(year, month, day, hour, minute, second))
+
+
+def get_date_from_timestamp(timestamp):
+    if isinstance(timestamp, (int, float)):
+        return datetime.datetime.fromtimestamp(timestamp).date()
+    raise ValueError(f'{timestamp} is incorrect time format, it should be timestamp (float num)')
+
+
 class Task:
     __task_amount = 0
 
@@ -14,15 +25,17 @@ class Task:
                  scheduled_time: datetime = constansts.DEFAULT_SCHEDULED_TIME):
         self.__task_title = self._task_value = self.__task_priority = self.__task_scheduled_time = None
         self.__task_id = self.__task_amount
-        self.__task_creation_time = datetime.datetime.now()  # .strftime('%Y-%m-%d %H:%M:%S')
+        self.__task_creation_time = datetime.datetime.timestamp(datetime.datetime.now())  #.strftime('%Y-%m-%d %H:%M:%S')
         self.set_title(title)
         self.set_value(value)
         self.set_priority(task_priority)
         self.schedule_time(scheduled_time)
 
-    @validators.validate_time
-    def schedule_time(self, time: datetime):
-        self.__task_scheduled_time = time
+    def schedule_time(self, time: float):
+        if isinstance(time, (int, float)):
+            self.__task_scheduled_time = time
+        else:
+            raise ValueError(f'{time} is incorrect time format, it should be timestamp (float num)')
 
     @validators.validate_text
     def set_value(self, value: str):
