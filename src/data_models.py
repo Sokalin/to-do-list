@@ -1,6 +1,6 @@
 import datetime
-import constansts
-import validators
+from src import constansts
+from src import validators
 
 
 def get_timestamp_from_date(year, month, day, hour=0, minute=0, second=0):
@@ -53,5 +53,5 @@ class Task:
                              it should be one of {constansts.TASK_PRIORITIES.values()}')
 
     def get_data(self) -> (int, int, str, str, datetime, datetime):
-        return self.__task_id, self.__task_priority, self.__task_title[0], self._task_value, \
+        return self.__task_id, self.__task_priority, self.__task_title, self._task_value, \
                self.__task_creation_time, self.__task_scheduled_time

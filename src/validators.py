@@ -1,5 +1,4 @@
-import constansts
-import datetime
+from src import constansts
 
 
 def validate_time_data(year, month, day, hour, minute, second):

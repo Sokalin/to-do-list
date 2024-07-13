@@ -64,6 +64,11 @@ class DataBaseManager:
         delete_query = f"DELETE FROM {table_name} WHERE {condition}"
         self.__cursor.execute(delete_query)
 
+    def get_records_by_condition(self, table_name: str, condition: str = None):
+        get_query = f'SELECT * FROM {table_name} WHERE {condition}' if condition else f'SELECT * FROM {table_name}'
+        self.__cursor.execute(get_query)
+        return self.__cursor.fetchall()
+
     def backup_table(self, table_name: str, backup_table_name: str):
         """
         Создает резервную копию таблицы.
@@ -71,3 +76,4 @@ class DataBaseManager:
         :param backup_table_name: str, имя резервной таблицы
         """
         self.__cursor.execute(f"CREATE TABLE {backup_table_name} AS SELECT * FROM {table_name}")
+
